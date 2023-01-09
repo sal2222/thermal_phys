@@ -1,6 +1,6 @@
 ---
 title: "annual_trends"
-format: html
+format: pdf
 editor: visual
 editor_options: 
   chunk_output_type: console
