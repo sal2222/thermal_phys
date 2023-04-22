@@ -1,6 +1,6 @@
 ---
 title: "annual_trends"
-format: pdf
+format: html
 editor: visual
 editor_options: 
   chunk_output_type: console
@@ -116,6 +116,11 @@ mean_plot_iet_fullyear <-
 
 
 mean_plot_iet_fullyear  
+
+ggsave(filename = "output/annual_index_trends_iet.tiff", plot = last_plot(), device ='tiff', dpi = 1000)
+ggsave(filename = "output/annual_index_trends_iet.eps", plot = last_plot(), device ='eps', dpi = 1000)
+
+
 ```
 
 ### IET - Heat Season (Mean of Daily Means from May to Sep)
@@ -140,44 +145,21 @@ mean_plot_iet_maytosep <-
          y = "Annual index (°F)") +
     xlim(1990, 2020) + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
-    scale_y_continuous("Annual index (°F)", sec.axis = sec_axis(trans = ~ (5/9) * (. - 32), name = "Annual index (°C)")) +
+    scale_y_continuous("May-September annual index (°F)", sec.axis = sec_axis(trans = ~ (5/9) * (. - 32), name = "May-September annual index (°C)")) +
   theme(legend.position="bottom") +
   labs(shape = "Installation", color = "Installation") +
   scale_color_viridis(discrete = TRUE)
 
 mean_plot_iet_maytosep
 
+
+ggsave(filename = "output/index_trends_iet_heat_season.tiff", plot = last_plot(), device ='tiff', dpi = 1000)
+ggsave(filename = "output/index_trends_iet_heat_season.eps", plot = last_plot(), device ='eps', dpi = 1000)
 ```
 
 
 ## Plot All Sites
 
-### Mean Plot - All
-```{r}
-## Degree-based indices: Mean / Max
-
-mean_plot_all <-
-  index_long %>% 
-     filter(cat %in% "Mean") %>%
-     mutate(index_scale = fct_relevel(index_scale, c("Temperature", "Heat Index", "WBGT"))) %>%  
-    ggplot(aes(x = year, y = value)) +
-      geom_point(size = 0.2) +
-      geom_smooth(aes(group = site_name), method = lm, se = FALSE, linewidth = 0.25, color = "gray", alpha = 0.5) +
-      geom_smooth(method = lm, se = FALSE, linewidth = 0.5, color = "blue") +
-      #facet_grid(season + index_scale ~ cat, scales = "free") +
-      facet_grid(cat ~ season + index_scale, scales = "free") +
-    theme_bw(base_size = 10) +
-    theme(strip.text = element_text(
-      size = 8)) +
-    labs(x = "Year",
-         y = "Annual index (°F)") +
-    xlim(1990, 2020) + 
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
-    scale_y_continuous("Annual index (°F)", sec.axis = sec_axis(trans = ~ (5/9) * (. - 32), name = "Annual index (°C)"))
-
-
-mean_plot_all
-```
 
 
 ### All - Full Calendar Year, Annual mean
@@ -208,6 +190,11 @@ mean_plot_all_fullyear <-
     scale_y_continuous("Annual index (°F)", sec.axis = sec_axis(trans = ~ (5/9) * (. - 32), name = "Annual index (°C)"))
 
 mean_plot_all_fullyear
+
+
+ggsave(filename = "output/annual_index_trends_iet.tiff", plot = last_plot(), device ='tiff', dpi = 1000)
+
+
 ```
 
 ### All - Heat Season, Annual mean
@@ -240,5 +227,31 @@ mean_plot_all_maytosep <-
 mean_plot_all_maytosep
 ```
 
+### Mean Plot - All
+```{r}
+## Degree-based indices: Mean / Max
+
+mean_plot_all <-
+  index_long %>% 
+     filter(cat %in% "Mean") %>%
+     mutate(index_scale = fct_relevel(index_scale, c("Temperature", "Heat Index", "WBGT"))) %>%  
+    ggplot(aes(x = year, y = value)) +
+      geom_point(size = 0.2) +
+      geom_smooth(aes(group = site_name), method = lm, se = FALSE, linewidth = 0.25, color = "gray", alpha = 0.5) +
+      geom_smooth(method = lm, se = FALSE, linewidth = 0.5, color = "blue") +
+      #facet_grid(season + index_scale ~ cat, scales = "free") +
+      facet_grid(cat ~ season + index_scale, scales = "free") +
+    theme_bw(base_size = 10) +
+    theme(strip.text = element_text(
+      size = 8)) +
+    labs(x = "Year",
+         y = "Annual index (°F)") +
+    xlim(1990, 2020) + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    scale_y_continuous("Annual index (°F)", sec.axis = sec_axis(trans = ~ (5/9) * (. - 32), name = "Annual index (°C)"))
+
+
+mean_plot_all
+```
 
 
