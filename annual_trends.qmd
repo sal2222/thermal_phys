@@ -158,6 +158,85 @@ ggsave(filename = "output/index_trends_iet_heat_season.eps", plot = last_plot(),
 ```
 
 
+
+
+## Edited Colors
+
+### IET - Full Calendar Year (Mean Annual)
+
+```{r}
+mean_plot_iet_fullyear <-
+    index_long %>% 
+     filter(site_name %in% c("Fort Benning", "Fort Jackson", "Fort Leonard Wood"),
+            cat %in% "Mean",
+            season %in% "Full Year") %>%
+     mutate(index_scale = fct_relevel(index_scale, c("Temperature", "Heat Index", "WBGT"))) %>%  
+    ggplot(aes(x = year, y = value, color = site_name, shape = site_name, fill = site_name)) +
+      geom_point(size = 1) +
+      geom_smooth(aes(group = site_name), method = lm, se = TRUE, linewidth = 1, alpha = 0.2) +
+ # stat_poly_line() +
+  stat_poly_eq(aes(label = after_stat(eq.label)), size = rel(4)) +
+    facet_grid(~ index_scale, scales = "free") +
+    theme_bw(base_size = 10) +
+    theme(strip.text = element_text(
+      size = 8)) +
+    labs(x = "Year",
+         y = "Annual index (°F)") +
+    xlim(1990, 2020) + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    scale_y_continuous("Annual index (°F)", sec.axis = sec_axis(trans = ~ (5/9) * (. - 32), name = "Annual index (°C)")) +
+  theme(legend.position="bottom") +
+  labs(shape = "Installation", color = "Installation", fill = "Installation") 
+
+
+mean_plot_iet_fullyear  
+
+ggsave(filename = "output/annual_index_trends_iet2.eps", plot = last_plot(), device ='eps', dpi = 1000)
+
+
+```
+
+### IET - Heat Season (Mean of Daily Means from May to Sep)
+
+```{r}
+
+mean_plot_iet_maytosep <-
+    index_long %>% 
+     filter(site_name %in% c("Fort Benning", "Fort Jackson", "Fort Leonard Wood"),
+            cat %in% "Mean",
+            season %in% "Heat Season") %>%
+     mutate(index_scale = fct_relevel(index_scale, c("Temperature", "Heat Index", "WBGT"))) %>%  
+    ggplot(aes(x = year, y = value, color = site_name, shape = site_name, fill = site_name)) +
+      geom_point(size = 1) +
+      geom_smooth(aes(group = site_name), method = lm, se = TRUE, linewidth = 1, alpha = 0.2) +
+ # stat_poly_line() +
+  stat_poly_eq(aes(label = after_stat(eq.label)), size = rel(4)) +
+    facet_grid(~ index_scale, scales = "free") +
+    theme_bw(base_size = 10) +
+   # theme(strip.text = element_text(size = 8)) +
+    labs(x = "Year",
+         y = "Annual index (°F)") +
+    xlim(1990, 2020) + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    scale_y_continuous("May-September annual index (°F)", sec.axis = sec_axis(trans = ~ (5/9) * (. - 32), name = "May-September annual index (°C)")) +
+  theme(legend.position="bottom") +
+  labs(shape = "Installation", color = "Installation", fill = "Installation")
+
+mean_plot_iet_maytosep
+
+
+ggsave(filename = "output/index_trends_iet_heat_season.eps2", plot = last_plot(), device ='eps', dpi = 1000)
+```
+
+
+
+
+
+
+
+
+
+
 ## Plot All Sites
 
 
